@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cbpmn:ProcessModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cbpmn="http://www.uqam.latece.ca/cpmn/" name="AmazonSD">
+  <mainBranch>
+    <nodes xsi:type="cbpmn:Event" name="Start" next="//@mainBranch/@nodes.1"/>
+    <nodes xsi:type="cbpmn:Activity" name="CheckOrder" next="//@mainBranch/@nodes.2" previous="//@mainBranch/@nodes.0">
+      <postConditions constraintName="AllProductsInStock" constraintStr="order.products->forAll(p:Product | p.onHand >0)"/>
+      <inputs name="order" lowerBound="1" higherBound="1">
+        <dataObjectClass href="AmazonInformational.ecore#//Order"/>
+      </inputs>
+      <outputs name="order" lowerBound="1" higherBound="1">
+        <dataObjectClass href="AmazonInformational.ecore#//Order"/>
+      </outputs>
+    </nodes>
+    <nodes xsi:type="cbpmn:Activity" name="PrepareOrder" next="//@mainBranch/@nodes.3" previous="//@mainBranch/@nodes.1">
+      <preConditions constraintName="AllProductsInStock" constraintStr=""/>
+      <postConditions constraintName="ProductsInPackagesExistInOrder" constraintStr="packages->forAll(Package pack | pack.products->forAll(Product p | order.products->contains(p)))"/>
+      <postConditions constraintName="AllProductsAreIncluded" constraintStr="order.products->forAll(Product p | packages->exists(Package pack | pack.products->contains(p)))"/>
+      <postConditions constraintName="OrderChangedStatus" constraintStr="order.status = &quot;readyToShip&quot;"/>
+      <inputs name="order" lowerBound="1" higherBound="1">
+        <dataObjectClass href="AmazonInformational.ecore#//Order"/>
+      </inputs>
+      <inputs name="products" lowerBound="-1" higherBound="1">
+        <dataObjectClass href="AmazonInformational.ecore#//Product"/>
+      </inputs>
+      <outputs name="packages" lowerBound="-1" higherBound="1">
+        <dataObjectClass href="AmazonInformational.ecore#//Package"/>
+      </outputs>
+    </nodes>
+    <nodes xsi:type="cbpmn:Activity" name="Ship" next="//@mainBranch/@nodes.4" previous="//@mainBranch/@nodes.2">
+      <preConditions constraintName="OrderReady" constraintStr="order.status=&quot;readyToShip&quot;"/>
+      <postConditions constraintName="OrderDelivered" constraintStr="order.status=&quot;delivered&quot;"/>
+      <inputs name="packages" lowerBound="-1" higherBound="1">
+        <dataObjectClass href="AmazonInformational.ecore#//Package"/>
+      </inputs>
+      <inputs name="order" lowerBound="1" higherBound="1">
+        <dataObjectClass href="AmazonInformational.ecore#//Order"/>
+      </inputs>
+      <outputs name="packages" lowerBound="-1" higherBound="1">
+        <dataObjectClass href="AmazonInformational.ecore#//Package"/>
+      </outputs>
+    </nodes>
+    <nodes xsi:type="cbpmn:Event" name="End" previous="//@mainBranch/@nodes.3"/>
+  </mainBranch>
+</cbpmn:ProcessModel>

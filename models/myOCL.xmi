@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ASCII"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:ocl.ecore="http://www.eclipse.org/ocl/1.1.0/Ecore">
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="file:/Users/anis/Cloud/Eclipse/workspace-luna/ca.uqam.latece.rbp/models/amazon_sd/gluemodel.ecore#//Activity1"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Constraint stereotype="invariant">
+    <specification xsi:type="ocl.ecore:ExpressionInOCL">
+      <bodyExpression xsi:type="ocl.ecore:OperationCallExp">
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Boolean"/>
+        <source xsi:type="ocl.ecore:PropertyCallExp">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          <source xsi:type="ocl.ecore:PropertyCallExp">
+            <eType xsi:type="ecore:EClass" href="file:/Users/anis/Cloud/Eclipse/workspace-luna/ca.uqam.latece.rbp/models/amazon_sd/AmazonInformational.ecore#//Order"/>
+            <source xsi:type="ocl.ecore:VariableExp" name="self" referredVariable="/1/@specification/@contextVariable">
+              <eType xsi:type="ecore:EClass" href="file:/Users/anis/Cloud/Eclipse/workspace-luna/ca.uqam.latece.rbp/models/amazon_sd/gluemodel.ecore#//Activity1"/>
+            </source>
+            <referredProperty xsi:type="ecore:EReference" href="file:/Users/anis/Cloud/Eclipse/workspace-luna/ca.uqam.latece.rbp/models/amazon_sd/gluemodel.ecore#//Activity1/order"/>
+          </source>
+          <referredProperty xsi:type="ecore:EAttribute" href="file:/Users/anis/Cloud/Eclipse/workspace-luna/ca.uqam.latece.rbp/models/amazon_sd/AmazonInformational.ecore#//Order/status"/>
+        </source>
+        <argument xsi:type="ocl.ecore:PropertyCallExp">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          <source xsi:type="ocl.ecore:VariableExp" name="self" referredVariable="/1/@specification/@contextVariable">
+            <eType xsi:type="ecore:EClass" href="file:/Users/anis/Cloud/Eclipse/workspace-luna/ca.uqam.latece.rbp/models/amazon_sd/gluemodel.ecore#//Activity1"/>
+          </source>
+          <referredProperty xsi:type="ecore:EAttribute" href="file:/Users/anis/Cloud/Eclipse/workspace-luna/ca.uqam.latece.rbp/models/amazon_sd/gluemodel.ecore#//Activity1/test"/>
+        </argument>
+        <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String_Class/%3C"/>
+      </bodyExpression>
+      <contextVariable xsi:type="ocl.ecore:Variable" name="self">
+        <eType xsi:type="ecore:EClass" href="file:/Users/anis/Cloud/Eclipse/workspace-luna/ca.uqam.latece.rbp/models/amazon_sd/gluemodel.ecore#//Activity1"/>
+      </contextVariable>
+    </specification>
+    <constrainedElements xsi:type="ecore:EClass" href="file:/Users/anis/Cloud/Eclipse/workspace-luna/ca.uqam.latece.rbp/models/amazon_sd/gluemodel.ecore#//Activity1"/>
+  </ocl.ecore:Constraint>
+</xmi:XMI>

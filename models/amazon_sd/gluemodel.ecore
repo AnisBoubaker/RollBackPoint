@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="ASCII"?>
+<ecore:EPackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="AmazonSDamazoninformationalglue" nsURI="http://amazoninformational/1.0.glue" nsPrefix="AmazonSDamazoninformationalglue">
+  <eClassifiers xsi:type="ecore:EClass" name="BPNode" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Start" eSuperTypes="//BPNode"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Parallelcheckandpayment" eSuperTypes="//BPNode"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Prepareorder" eSuperTypes="//BPNode">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="order" lowerBound="1">
+      <eType xsi:type="ecore:EClass" href="AmazonInformational.ecore#//Order"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="products" lowerBound="-1">
+      <eType xsi:type="ecore:EClass" href="AmazonInformational.ecore#//Product"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="packages" lowerBound="1">
+      <eType xsi:type="ecore:EClass" href="AmazonInformational.ecore#//Package"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Shippingdecision" eSuperTypes="//BPNode">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="order">
+      <eType xsi:type="ecore:EClass" href="AmazonInformational.ecore#//Order"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Receivedeliveryconfirmation" eSuperTypes="//BPNode">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="packages" upperBound="-1">
+      <eType xsi:type="ecore:EClass" href="AmazonInformational.ecore#//Package"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="order" lowerBound="1">
+      <eType xsi:type="ecore:EClass" href="AmazonInformational.ecore#//Order"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="End" eSuperTypes="//BPNode"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Checkorder" eSuperTypes="//BPNode">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="order" lowerBound="1">
+      <eType xsi:type="ecore:EClass" href="AmazonInformational.ecore#//Order"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="HandlePayment" eSuperTypes="//BPNode"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Ship" eSuperTypes="//BPNode">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="packages" lowerBound="-1">
+      <eType xsi:type="ecore:EClass" href="AmazonInformational.ecore#//Package"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="order" lowerBound="1">
+      <eType xsi:type="ecore:EClass" href="AmazonInformational.ecore#//Order"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Notifycustomer" eSuperTypes="//BPNode"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Ship2" eSuperTypes="//BPNode">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="packages" lowerBound="-1">
+      <eType xsi:type="ecore:EClass" href="AmazonInformational.ecore#//Package"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="order" lowerBound="1">
+      <eType xsi:type="ecore:EClass" href="AmazonInformational.ecore#//Order"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Notifyaccounting" eSuperTypes="//BPNode">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="order">
+      <eType xsi:type="ecore:EClass" href="AmazonInformational.ecore#//Order"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Receiveapprovalfromaccounting" eSuperTypes="//BPNode">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="order" lowerBound="1">
+      <eType xsi:type="ecore:EClass" href="AmazonInformational.ecore#//Order"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Ship3" eSuperTypes="//BPNode">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="packages" lowerBound="-1">
+      <eType xsi:type="ecore:EClass" href="AmazonInformational.ecore#//Package"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="order" lowerBound="1">
+      <eType xsi:type="ecore:EClass" href="AmazonInformational.ecore#//Order"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+</ecore:EPackage>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cbpmn:ProcessModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cbpmn="http://www.latece.uqam.ca/cbpmn/" name="AmazonSD">
+  <mainBranch>
+    <nodes xsi:type="cbpmn:StartEvent" name="Start" next="//@mainBranch/@nodes.1"/>
+    <nodes xsi:type="cbpmn:ParallelGateway" name="ParallelCheckAndPayment" next="//@mainBranch/@nodes.2" previous="//@mainBranch/@nodes.0">
+      <branches>
+        <nodes xsi:type="cbpmn:Activity" name="CheckOrder">
+          <inputs name="order" lowerBound="1">
+            <dataObjectClass href="AmazonInformational.ecore#//Order"/>
+          </inputs>
+          <postConditions constraintName="CustomerInGoodStanding" constraintStr="order.customer.inGoodStanding=true"/>
+          <postConditions constraintName="AllProductsInStock" constraintStr="order.products->forAll(p | p.onHand >0)"/>
+          <outputs name="order" lowerBound="1">
+            <dataObjectClass href="AmazonInformational.ecore#//Order"/>
+          </outputs>
+          <invariabilityClauses constraintName="NonAvailableProductsAreRemoved" constraintStr="order.products"/>
+          <invariabilityClauses constraintName="TotalAmountIsComputed" constraintStr="order.totalAmount"/>
+        </nodes>
+      </branches>
+      <branches>
+        <nodes xsi:type="cbpmn:Activity" name="Handle Payment" type="SERVICE"/>
+      </branches>
+    </nodes>
+    <nodes xsi:type="cbpmn:Activity" name="PrepareOrder" next="//@mainBranch/@nodes.3" previous="//@mainBranch/@nodes.1">
+      <inputs name="order" lowerBound="1">
+        <dataObjectClass href="AmazonInformational.ecore#//Order"/>
+      </inputs>
+      <inputs name="products" lowerBound="-1">
+        <dataObjectClass href="AmazonInformational.ecore#//Product"/>
+      </inputs>
+      <preConditions constraintName="AllProductsInStock" constraintStr="order.products->forAll(p | p.onHand >0) and order.status='notReady'"/>
+      <postConditions constraintName="ProductsInPackagesExistInOrder" constraintStr="packages->forAll(pack | pack.products->forAll(p | order.products->exists(p2 | p2=p)))"/>
+      <postConditions constraintName="AllProductsAreIncluded" constraintStr="order.products->forAll(p | packages->exists(pack | pack.products->exists(p2 | p2=p)))"/>
+      <postConditions constraintName="OrderChangedStatus" constraintStr="order.status = 'readyToShip'"/>
+      <outputs name="packages" lowerBound="1">
+        <dataObjectClass href="AmazonInformational.ecore#//Package"/>
+      </outputs>
+      <invariabilityClauses constraintName="inv1" constraintStr="order.status"/>
+      <invariabilityClauses constraintName="inv2" constraintStr="packages->collect(products)"/>
+    </nodes>
+    <nodes xsi:type="cbpmn:DecisionGateway" name="ShippingDecision" next="//@mainBranch/@nodes.4" previous="//@mainBranch/@nodes.2">
+      <inputs name="order">
+        <dataObjectClass href="AmazonInformational.ecore#//Order"/>
+      </inputs>
+      <branches>
+        <nodes xsi:type="cbpmn:Activity" name="Ship">
+          <inputs name="packages" lowerBound="-1">
+            <dataObjectClass href="AmazonInformational.ecore#//Package"/>
+          </inputs>
+          <inputs name="order" lowerBound="1">
+            <dataObjectClass href="AmazonInformational.ecore#//Order"/>
+          </inputs>
+          <preConditions constraintName="OrderReady" constraintStr="order.status='readyToShip'"/>
+          <postConditions constraintName="OrderDelivered" constraintStr="order.status='delivered'"/>
+          <postConditions constraintName="PackagesLocationChanged" constraintStr="packages.location = 'customers'"/>
+          <outputs name="packages" lowerBound="1">
+            <dataObjectClass href="AmazonInformational.ecore#//Package"/>
+          </outputs>
+          <invariabilityClauses constraintName="inv1" constraintStr="packages.location"/>
+          <invariabilityClauses constraintName="inv2" constraintStr="order.status"/>
+        </nodes>
+        <entryConditions constraintName="creditLimitNotReached" constraintStr="order.customer.consummedCredit+order.totalAmount&lt;=order.customer.creditLimit"/>
+      </branches>
+      <branches>
+        <nodes xsi:type="cbpmn:Activity" name="NotifyCustomer" next="//@mainBranch/@nodes.3/@branches.1/@nodes.1" type="SEND"/>
+        <nodes xsi:type="cbpmn:Activity" name="Ship2" previous="//@mainBranch/@nodes.3/@branches.1/@nodes.0">
+          <inputs name="packages" lowerBound="-1">
+            <dataObjectClass href="AmazonInformational.ecore#//Package"/>
+          </inputs>
+          <inputs name="order" lowerBound="1">
+            <dataObjectClass href="AmazonInformational.ecore#//Order"/>
+          </inputs>
+          <preConditions constraintName="OrderReady" constraintStr="order.status='readyToShip'"/>
+          <postConditions constraintName="OrderShipped" constraintStr="order.status='shipped'"/>
+          <outputs name="packages" lowerBound="1">
+            <dataObjectClass href="AmazonInformational.ecore#//Package"/>
+          </outputs>
+          <invariabilityClauses constraintName="inv1" constraintStr="packages.location"/>
+          <invariabilityClauses constraintName="inv2" constraintStr="order.status"/>
+        </nodes>
+        <entryConditions constraintName="ExceededCreditIsLessThanThreshhold" constraintStr="order.customer.consummedCredit+order.totalAmount&lt;=(order.customer.creditLimit*1.25)"/>
+        <entryConditions constraintName="CustomerIsVIP" constraintStr="order.customer.isVIP"/>
+      </branches>
+      <branches default="true">
+        <nodes xsi:type="cbpmn:Activity" name="NotifyAccounting" next="//@mainBranch/@nodes.3/@branches.2/@nodes.1" type="SEND">
+          <inputs name="order">
+            <dataObjectClass href="AmazonInformational.ecore#//Order"/>
+          </inputs>
+          <postConditions constraintName="OrderAwaitsApproval" constraintStr="order.status='awaitingApprovalFroShipping'"/>
+        </nodes>
+        <nodes xsi:type="cbpmn:IntermediateEvent" name="ReceiveApprovalFromAccounting" next="//@mainBranch/@nodes.3/@branches.2/@nodes.2" previous="//@mainBranch/@nodes.3/@branches.2/@nodes.0">
+          <inputs name="order" lowerBound="1">
+            <dataObjectClass href="AmazonInformational.ecore#//Order"/>
+          </inputs>
+          <trigger constraintName="OrderIsApproved" constraintStr="order.status='approvedForShipping'"/>
+        </nodes>
+        <nodes xsi:type="cbpmn:Activity" name="Ship3" previous="//@mainBranch/@nodes.3/@branches.2/@nodes.1">
+          <inputs name="packages" lowerBound="-1">
+            <dataObjectClass href="AmazonInformational.ecore#//Package"/>
+          </inputs>
+          <inputs name="order" lowerBound="1">
+            <dataObjectClass href="AmazonInformational.ecore#//Order"/>
+          </inputs>
+          <preConditions constraintName="OrderReady" constraintStr="order.status='readyToShip'"/>
+          <postConditions constraintName="OrderShipped" constraintStr="order.status='shipped'"/>
+          <outputs name="packages" lowerBound="1">
+            <dataObjectClass href="AmazonInformational.ecore#//Package"/>
+          </outputs>
+          <invariabilityClauses constraintName="inv1" constraintStr="packages.location"/>
+          <invariabilityClauses constraintName="inv2" constraintStr="order.status"/>
+        </nodes>
+      </branches>
+    </nodes>
+    <nodes xsi:type="cbpmn:Activity" name="ReceiveDeliveryConfirmation" next="//@mainBranch/@nodes.5" previous="//@mainBranch/@nodes.3" type="RECEIVE">
+      <inputs name="packages" higherBound="-1">
+        <dataObjectClass href="AmazonInformational.ecore#//Package"/>
+      </inputs>
+      <inputs name="order" lowerBound="1">
+        <dataObjectClass href="AmazonInformational.ecore#//Order"/>
+      </inputs>
+      <preConditions constraintName="PackagesLocationChanged" constraintStr="packages->forAll(pack | pack.location = order.customer.address)"/>
+      <postConditions constraintName="OrderIsDelivered" constraintStr="order.status='delivered'"/>
+    </nodes>
+    <nodes xsi:type="cbpmn:EndEvent" name="End" previous="//@mainBranch/@nodes.4"/>
+  </mainBranch>
+</cbpmn:ProcessModel>
